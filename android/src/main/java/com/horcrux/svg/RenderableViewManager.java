@@ -606,6 +606,19 @@ class RenderableViewManager extends ViewGroupManager<VirtualView> {
         public void setMeetOrSlice(ImageView node, int meetOrSlice) {
             node.setMeetOrSlice(meetOrSlice);
         }
+
+        @Override
+        public Map getExportedCustomBubblingEventTypeConstants() {
+            return MapBuilder.builder()
+            .put(
+                REACT_ON_IMAGE_LOAD,
+                MapBuilder.of(
+                    "phasedRegistrationNames",
+                    MapBuilder.of("bubbled", REACT_ON_IMAGE_LOAD)
+                )
+            )
+            .build();
+        }
     }
 
     static class CircleViewManager extends RenderableViewManager {
