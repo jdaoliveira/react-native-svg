@@ -31,8 +31,10 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.views.imagehelper.ImageSource;
 import com.facebook.react.views.imagehelper.ResourceDrawableIdHelper;
 
@@ -43,6 +45,8 @@ import javax.annotation.Nullable;
 
 @SuppressLint("ViewConstructor")
 class ImageView extends RenderableView {
+    static final String REACT_ON_IMAGE_LOAD = "onImageLoad";
+	
     private SVGLength mX;
     private SVGLength mY;
     private SVGLength mW;
@@ -118,6 +122,15 @@ class ImageView extends RenderableView {
         invalidate();
     }
 
+    private void onLoad() {
+        ReactContext reactContext = (ReactContext)getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+            getId(),
+            REACT_ON_IMAGE_LOAD,
+            new WritableNativeMap()
+        );
+    }
+
     @Override
     void draw(final Canvas canvas, final Paint paint, final float opacity) {
         if (!mLoading.get()) {
@@ -149,6 +162,7 @@ class ImageView extends RenderableView {
             @Override
             public void onNewResultImpl(Bitmap bitmap) {
                 mLoading.set(false);
+                onLoad();
                 SvgView view = getSvgView();
                 if (view != null) {
                     view.invalidate();
@@ -205,6 +219,8 @@ class ImageView extends RenderableView {
         canvas.drawBitmap(bitmap, null, vbRect, alphaPaint);
         mCTM.mapRect(vbRect);
         this.setClientRect(vbRect);
+		
+        onLoad();
     }
 
     private void tryRenderFromBitmapCache(ImagePipeline imagePipeline, ImageRequest request, Canvas canvas, Paint paint, float opacity) {

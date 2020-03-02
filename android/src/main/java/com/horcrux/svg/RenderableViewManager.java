@@ -14,6 +14,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.JavaOnlyMap;
 import com.facebook.react.bridge.ReadableArray;
@@ -28,6 +29,8 @@ import com.facebook.react.uimanager.TransformHelper;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.annotations.ReactPropGroup;
+
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,6 +99,7 @@ import static com.facebook.react.uimanager.ViewProps.WIDTH;
 import static com.horcrux.svg.RenderableView.CAP_ROUND;
 import static com.horcrux.svg.RenderableView.FILL_RULE_NONZERO;
 import static com.horcrux.svg.RenderableView.JOIN_ROUND;
+import static com.horcrux.svg.ImageView.REACT_ON_IMAGE_LOAD;
 
 /**
  * ViewManager for all RNSVG views
@@ -596,7 +600,6 @@ class RenderableViewManager extends ViewGroupManager<VirtualView> {
             node.setSrc(src);
         }
 
-
         @ReactProp(name = "align")
         public void setAlign(ImageView node, String align) {
             node.setAlign(align);
@@ -605,6 +608,19 @@ class RenderableViewManager extends ViewGroupManager<VirtualView> {
         @ReactProp(name = "meetOrSlice")
         public void setMeetOrSlice(ImageView node, int meetOrSlice) {
             node.setMeetOrSlice(meetOrSlice);
+        }
+
+        @Override
+        public Map getExportedCustomBubblingEventTypeConstants() {
+            return MapBuilder.builder()
+            .put(
+                REACT_ON_IMAGE_LOAD,
+                MapBuilder.of(
+                    "phasedRegistrationNames",
+                    MapBuilder.of("bubbled", REACT_ON_IMAGE_LOAD)
+                )
+            )
+            .build();
         }
     }
 

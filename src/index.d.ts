@@ -282,6 +282,7 @@ export interface ImageProps
   opacity?: NumberProp;
   clipPath?: string;
   id?: string;
+  onLoad?: () => void;
 }
 export const Image: React.ComponentClass<ImageProps>;
 

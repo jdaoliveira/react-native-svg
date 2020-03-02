@@ -16,6 +16,7 @@ export default class SvgImage extends Shape<{
   height?: NumberProp;
   xlinkHref?: string | number | ImageSourcePropType;
   href?: string | number | ImageSourcePropType;
+  onLoad?: () => void;
 }> {
   static displayName = 'Image';
 
@@ -37,6 +38,7 @@ export default class SvgImage extends Shape<{
       height,
       xlinkHref,
       href = xlinkHref,
+      onLoad
     } = props;
     const modes = preserveAspectRatio
       ? preserveAspectRatio.trim().split(spacesRegExp)
@@ -52,6 +54,7 @@ export default class SvgImage extends Shape<{
         y={y}
         width={width}
         height={height}
+        onImageLoad={onLoad}
         meetOrSlice={meetOrSliceTypes[meetOrSlice] || 0}
         align={alignEnum[align] || 'xMidYMid'}
         src={
