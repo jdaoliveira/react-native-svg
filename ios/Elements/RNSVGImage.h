@@ -23,5 +23,6 @@
 @property (nonatomic, strong) RNSVGLength* imageheight;
 @property (nonatomic, strong) NSString *align;
 @property (nonatomic, assign) RNSVGVBMOS meetOrSlice;
+@property (nonatomic, copy) RCTDirectEventBlock onImageLoad;
 
 @end

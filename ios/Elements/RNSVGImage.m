@@ -33,6 +33,12 @@
     RCTImageLoaderCancellationBlock _reloadImageCancellationBlock;
 }
 
+- (void)emitOnImageLoad {
+    if (self.onImageLoad) {
+		self.onImageLoad([NSMutableDictionary dictionary]);
+	}
+}
+
 - (void)setSrc:(id)src
 {
     if (src == _src) {
@@ -58,6 +64,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self->_image = CGImageRetain(image.CGImage);
             self->_imageSize = CGSizeMake(CGImageGetWidth(self->_image), CGImageGetHeight(self->_image));
+			
+            [self emitOnImageLoad];
             [self invalidate];
         });
     }];
