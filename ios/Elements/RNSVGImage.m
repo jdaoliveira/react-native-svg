@@ -175,6 +175,8 @@
         self.center = center;
     }
     self.frame = bounds;
+	
+	[self emitOnImageLoad];
 }
 
 - (CGRect)getHitArea
