@@ -39,6 +39,14 @@
 	}
 }
 
+- (void)emitOnImageError:(NSString *)error {
+    if (self.onImageError && error) {
+		self.onImageError(@{
+			@"error": @(error)
+		});
+	}
+}
+
 - (void)setSrc:(id)src
 {
     if (src == _src) {
@@ -63,7 +71,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self->_image = CGImageRetain(image.CGImage);
             self->_imageSize = CGSizeMake(CGImageGetWidth(self->_image), CGImageGetHeight(self->_image));
-			
+			if ( error && error.localizedDescription ) {
+				[self emitOnImageError: error.localizedDescription];
+			}
             [self emitOnImageLoad];
             [self invalidate];
         });
@@ -132,6 +142,7 @@
 - (void)renderLayerTo:(CGContextRef)context rect:(CGRect)rect
 {
     if (CGSizeEqualToSize(CGSizeZero, _imageSize)) {
+		[self emitOnImageError: "CGSizeEqualToSize"];
         return;
     }
     CGContextSaveGState(context);

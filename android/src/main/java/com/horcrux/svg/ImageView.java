@@ -32,6 +32,8 @@ import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
@@ -46,6 +48,7 @@ import javax.annotation.Nullable;
 @SuppressLint("ViewConstructor")
 class ImageView extends RenderableView {
     static final String REACT_ON_IMAGE_LOAD = "onImageLoad";
+    static final String REACT_ON_IMAGE_ERROR = "onImageError";
 	
     private SVGLength mX;
     private SVGLength mY;
@@ -131,6 +134,17 @@ class ImageView extends RenderableView {
         );
     }
 
+    private void onError(String message) {
+        WritableMap event = Arguments.createMap();
+        event.putString("message", message);
+        ReactContext reactContext = (ReactContext)getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+            getId(),
+            REACT_ON_IMAGE_ERROR,
+            event
+        );
+    }
+
     @Override
     void draw(final Canvas canvas, final Paint paint, final float opacity) {
         if (!mLoading.get()) {
@@ -174,7 +188,9 @@ class ImageView extends RenderableView {
                 // No cleanup required here.
                 // TODO: more details about this failure
                 mLoading.set(false);
-                FLog.w(ReactConstants.TAG, dataSource.getFailureCause(), "RNSVG: fetchDecodedImage failed!");
+                Throwable t = dataSource.getFailureCause();
+                onError(t.toString());
+                FLog.w(ReactConstants.TAG, t, "RNSVG: fetchDecodedImage failed!");
             }
         };
         dataSource.subscribe(subscriber, UiThreadImmediateExecutorService.getInstance());
@@ -236,6 +252,7 @@ class ImageView extends RenderableView {
             try {
                 CloseableImage closeableImage = imageReference.get();
                 if (!(closeableImage instanceof CloseableBitmap)) {
+                    onError("closeableImage instanceof CloseableBitmap");
                     return;
                 }
 
@@ -243,6 +260,7 @@ class ImageView extends RenderableView {
                 final Bitmap bitmap = closeableBitmap.getUnderlyingBitmap();
 
                 if (bitmap == null) {
+                    onError("bitmap == null");
                     return;
                 }
 
@@ -255,6 +273,7 @@ class ImageView extends RenderableView {
             }
 
         } catch (Exception e) {
+            onError(e.toString());
             throw new IllegalStateException(e);
         } finally {
             dataSource.close();

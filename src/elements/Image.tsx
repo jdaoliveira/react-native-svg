@@ -41,7 +41,8 @@ export default class SvgImage extends Shape<{
       height,
       xlinkHref,
       href = xlinkHref,
-	  onLoad
+	  onLoad,
+	  onError
     } = props;
     const modes = preserveAspectRatio
       ? preserveAspectRatio.trim().split(spacesRegExp)
@@ -58,6 +59,7 @@ export default class SvgImage extends Shape<{
         width={width}
         height={height}
 		onImageLoad={onLoad}
+		onImageError={onError}
         meetOrSlice={meetOrSliceTypes[meetOrSlice] || 0}
         align={alignEnum[align] || 'xMidYMid'}
         src={

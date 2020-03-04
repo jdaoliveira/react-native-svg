@@ -24,5 +24,6 @@
 @property (nonatomic, strong) NSString *align;
 @property (nonatomic, assign) RNSVGVBMOS meetOrSlice;
 @property (nonatomic, copy) RCTDirectEventBlock onImageLoad;
+@property (nonatomic, copy) RCTDirectEventBlock onImageError;
 
 @end
