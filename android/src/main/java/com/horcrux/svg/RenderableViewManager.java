@@ -100,6 +100,7 @@ import static com.horcrux.svg.RenderableView.CAP_ROUND;
 import static com.horcrux.svg.RenderableView.FILL_RULE_NONZERO;
 import static com.horcrux.svg.RenderableView.JOIN_ROUND;
 import static com.horcrux.svg.ImageView.REACT_ON_IMAGE_LOAD;
+import static com.horcrux.svg.ImageView.REACT_ON_IMAGE_ERROR;
 
 /**
  * ViewManager for all RNSVG views
@@ -619,6 +620,13 @@ class RenderableViewManager extends ViewGroupManager<VirtualView> {
                 MapBuilder.of(
                     "phasedRegistrationNames",
                     MapBuilder.of("bubbled", REACT_ON_IMAGE_LOAD)
+                )
+            )
+            .put(
+                REACT_ON_IMAGE_ERROR,
+                MapBuilder.of(
+                    "phasedRegistrationNames",
+                    MapBuilder.of("bubbled", REACT_ON_IMAGE_ERROR)
                 )
             )
             .build();
