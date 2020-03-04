@@ -20,6 +20,7 @@ export default class SvgImage extends Shape<{
   xlinkHref?: string | number | ImageSourcePropType;
   href?: string | number | ImageSourcePropType;
   onLoad?: () => void;
+  onError?: (error: any) => void;
 }> {
   static displayName = 'Image';
 
