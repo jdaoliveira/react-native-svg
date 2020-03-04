@@ -42,7 +42,7 @@
 - (void)emitOnImageError:(NSString *)error {
     if (self.onImageError && error) {
 		self.onImageError(@{
-			@"error": @(error)
+			@"error": error
 		});
 	}
 }
@@ -142,7 +142,7 @@
 - (void)renderLayerTo:(CGContextRef)context rect:(CGRect)rect
 {
     if (CGSizeEqualToSize(CGSizeZero, _imageSize)) {
-		[self emitOnImageError: "CGSizeEqualToSize"];
+		[self emitOnImageError: @"CGSizeEqualToSize"];
         return;
     }
     CGContextSaveGState(context);
