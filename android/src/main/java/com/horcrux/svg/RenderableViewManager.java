@@ -601,7 +601,6 @@ class RenderableViewManager extends ViewGroupManager<VirtualView> {
             node.setSrc(src);
         }
 
-
         @ReactProp(name = "align")
         public void setAlign(ImageView node, String align) {
             node.setAlign(align);
